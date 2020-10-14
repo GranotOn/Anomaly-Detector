@@ -2,31 +2,68 @@
 #include <iostream>
 using namespace std;
 
+float mean(float *x, int size)
+{
+    if (size == 0)
+        return 0.0f;
+    
+    float sum = 0.0f;
+    for (int i = 0; i < size; ++i)
+    {
+        sum += x[i];
+    }
+    return sum * ((float)1 / size);
+}
+
 float var(float *x, int size)
 {
-    float inv = ((float) 1 / size);
 
     if (size == 0)
-        return 0.0;
+        return 0.0f;
 
-    float sum = 0, mean = 0;
-    
+    float sum = 0.0f;
+    float m_x = mean(x, size);
+
     for (int i = 0; i < size; ++i)
     {
         sum += pow(x[i], 2);
-        mean += x[i];
     }
+    sum *= ((float)1 / size);
 
-    sum *= inv;
-    mean *= inv;
+    return sum - pow(m_x, 2);
+}
 
-    return sum - pow(mean, 2);
+float cov(float *x, float *y, int size)
+{
+    if (size == 0)
+        return 0.0f;
+
+    float m_x = mean(x, size);
+    float m_y = mean(y, size);
+    float sum_xy = 0.0f;
+
+    for (int i = 0; i < size; ++i) {
+        sum_xy += x[i] * y[i];
+    }
+    return (sum_xy * ((float) 1 / size)) - (m_x * m_y);
+}
+
+float pearson(float *x, float *y, int size) {
+    float cov_xy = cov(x, y, size);
+    float v_x = var(x, size), v_y = var(y, size);
+    
+    if ((size == 0) || (v_x == 0) || (v_y == 0))
+        return 0.0f; 
+
+    return (cov_xy / (sqrt(v_x) * sqrt(v_y)));
 }
 
 int main()
 {
-    float x[3] = {1.0f, 2.0f, 3.5f};
-    cout << var(x, 3);
+    float x[] = {1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0};
+    float y[] = {5.0, 4.0, 5.0, 6.0, 8.0, 9.0, 10.0, 13.0, 12.0};
+    cout << cov(x, y, 9) << endl;
+    cout << pearson(x, y, 9) << endl;
 
     return 0;
 }

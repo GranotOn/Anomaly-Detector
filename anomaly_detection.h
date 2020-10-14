@@ -4,7 +4,7 @@ float var(float* x, int size);
 // Returns the Covariance of X and Y
 float cov(float* x, float* y, int size);
 
-// REeturns the Pearson correlation coeffiecient of X and Y
+// Returns the Pearson correlation coeffiecient of X and Y
 float pearson(float* x, float* y, int size);
 
 class Line{

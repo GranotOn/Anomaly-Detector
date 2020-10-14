@@ -1,3 +1,4 @@
+#include "anomaly_detection.h"
 #include <cmath>
 #include <iostream>
 using namespace std;
@@ -56,6 +57,22 @@ float pearson(float *x, float *y, int size) {
         return 0.0f; 
 
     return (cov_xy / (sqrt(v_x) * sqrt(v_y)));
+}
+
+Line linear_reg(Point** points, int size) {
+    float x[size], y[size];
+    for (int i = 0; i < size; ++i) {
+        Point *point = points[i];
+        x[i] = point->x;
+        y[i] = point->y;
+    }
+
+    float m_x = mean(x, size), m_y = mean(y, size);
+    float a = (cov(x, y, size) / var(x, size));
+    float b = m_y - (a * m_x);
+    
+    Line *line = new Line(a, b);
+    return *line;
 }
 
 int main()

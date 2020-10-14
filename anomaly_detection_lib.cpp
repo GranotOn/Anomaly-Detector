@@ -60,6 +60,11 @@ float pearson(float *x, float *y, int size) {
 }
 
 Line linear_reg(Point** points, int size) {
+    if (size == 0) {
+        Line *line = nullptr;
+        return *line;
+    }
+
     float x[size], y[size];
     for (int i = 0; i < size; ++i) {
         Point *point = points[i];
@@ -73,6 +78,19 @@ Line linear_reg(Point** points, int size) {
     
     Line *line = new Line(a, b);
     return *line;
+}
+
+float dev(Point p, Line l) {
+    float f_x = l.f(p.x);
+    return abs((f_x - p.y));
+}
+
+float dev(Point p, Point** points, int size) {
+    if (size == 0)
+        return 0.0f;
+
+    Line line = linear_reg(points, size);
+    return dev(p, line);
 }
 
 int main()

@@ -18,7 +18,6 @@ float mean(float *x, int size)
 
 float var(float *x, int size)
 {
-
     if (size == 0)
         return 0.0f;
 
@@ -29,6 +28,7 @@ float var(float *x, int size)
     {
         sum += pow(x[i], 2);
     }
+
     sum *= ((float)1 / size);
 
     return sum - pow(m_x, 2);
@@ -86,19 +86,44 @@ float dev(Point p, Line l) {
 }
 
 float dev(Point p, Point** points, int size) {
-    if (size == 0)
+    if (size == 0)  
         return 0.0f;
 
     Line line = linear_reg(points, size);
     return dev(p, line);
 }
 
-int main()
-{
-    float x[] = {1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0};
-    float y[] = {5.0, 4.0, 5.0, 6.0, 8.0, 9.0, 10.0, 13.0, 12.0};
-    cout << cov(x, y, 9) << endl;
-    cout << pearson(x, y, 9) << endl;
 
+
+bool wrong(float val, float expected){
+    return val<expected-0.001 || val>expected+0.001;
+}
+
+// this is a simple test to put you on the right track
+int main(){
+    const int N=10;
+    float x[]={1,2,3,4,5,6,7,8,9,10};
+    float y[]={2.1,4.2,6.1,8.1,10.3,12.2,14.4,16.1,18.2,20.3};
+
+    Point* ps[N];
+    for(int i=0;i<N;i++)
+        ps[i]=new Point(x[i],y[i]);
+
+    Line l=linear_reg(ps,N);
+
+    Point p(4,8);
+
+    float v[]={var(x,N),cov(x,y,N),pearson(x,y,N),l.a,l.b,l.f(4),dev(p,l)};
+    float e[]={8.25,16.63,0.999,2.015,0.113,8.176,0.176};
+
+
+    for(int i=0;i<7;i++)
+        if(wrong(v[i],e[i]))
+            cout<<"error for check "<<i<<" (-14)"<<endl;
+
+
+    for(int i=0;i<N;i++)
+        delete ps[i];
+    cout<<"done"<<endl;
     return 0;
 }
